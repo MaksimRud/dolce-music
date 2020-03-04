@@ -1,0 +1,30 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "music_search/css/style.css" %}"  type="text/css">
+   <title> {% block title %}Document{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <div class="header">
+            <nav class="header-nav">
+                <ul>
+                    <li>
+                        <a href="/">Dolce Music</a> 
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section>
+    {% block detail %}
+        <p>detail</p>
+    {% endblock %}
+    </section>
+</body>
+</html>
