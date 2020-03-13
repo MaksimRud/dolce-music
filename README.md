@@ -1,1 +1,1 @@
-Dolce Music - service for exploring classsical music
+Dolce Music - service for exploring classical music

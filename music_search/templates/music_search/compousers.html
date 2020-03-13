@@ -12,11 +12,13 @@
 </head>
 <body>
     <section>
-        {% block table-header %}<h1 class="table-name">Period data list</h1>{% endblock %}
-        {% block create_button %}
-                    <a href="{% url 'music_search:create_period' %}" class="button" >Create Period</a>
+        {% block table-header %}
+            <h1 class="table-name">Compousers data list</h1>
         {% endblock %}
-        {% if period_list %}
+        {% block create_button %}
+            <a href="{% url 'music_search:create_compouser' %}" class="button" >Create Compouser</a>
+        {% endblock %}
+        {% if compousers_list %}
         {% block table %}
         <table class="db-table">
             {% block header %}
@@ -36,9 +38,9 @@
 
             {% block content %}
             <tbody>
-                {% for period in content_period %}
+                {% for compouser in content_compousers %}
                     <tr>
-                        {% for k, v in period.items %}
+                        {% for k, v in compouser.items %}
                             {% if not forloop.last %}
                             <td>
                                 {{v}}
@@ -49,12 +51,12 @@
                         <td class ="db-table__action">
                             <ul class = "db-table__action-list">
                                 <li>
-                                    <a href="{% url 'music_search:detail_period' period.id  %}">
+                                    <a href="{% url 'music_search:detail_compouser' compouser.id  %}">
                                         Detail
                                     </a>
                                 </li>   
                                 <li>
-                                    <a href="{% url 'music_search:edit_period' period.id %}">
+                                    <a href="{% url 'music_search:edit_compouser' compouser.id %}">
                                         Edit
                                     </a>
                                 </li>
@@ -64,8 +66,6 @@
                                     </a>
                                     
                                 </li>
-                                
-
                             </ul> 
                         </td>
                     </tr>
@@ -73,6 +73,7 @@
             </tbody>
             {% endblock %}    
         </table>
+        <div id="chart-container">{{ chart_compousers|safe }}</div>
         {% endblock %}
         {% else %}
             <p>No polls are available.</p>

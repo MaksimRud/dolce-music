@@ -8,12 +8,14 @@
 from django.db import models
 from django.forms import ModelForm
 from django.urls import reverse
+from django.core.validators import RegexValidator
+from .validators import *
 
 
 class Period(models.Model):
     # Field name made lowercase.
     time_of_period = models.CharField(
-        db_column='Time_of_Period', max_length=10)
+        db_column='Time_of_Period', max_length=10, validators=[RegexValidator(regex='^[1-9]([0-9]{3})[-][1-9]([0-9]{3})$'), validate_year])
     # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=45)
     # Field name made lowercase.
@@ -23,7 +25,7 @@ class Period(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('music_search:detail', kwargs={'pk': self.pk})
+        return reverse('music_search:detail_period', kwargs={'pk': self.pk})
 
     class Meta:
         managed = False
@@ -44,6 +46,9 @@ class Compousers(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('music_search:detail_compouser', kwargs={'pk': self.pk})
 
     class Meta:
         managed = False
@@ -313,5 +318,3 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
-
-
