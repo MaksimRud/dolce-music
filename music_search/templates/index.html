@@ -1,12 +1,61 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{% static "music_search/css/home.css" %}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500&display=swap" rel="stylesheet">
+    <title>Dolce Music</title>
 </head>
 <body>
-    <h1>Index page</h1>
-    
+    <main>
+        <section class="home-banner">
+            <header>
+                <div class="header">
+                    <nav class="header-nav">
+                        <ul>
+                            <li>
+                                <a class="home" href="/">Dolce Music</a> 
+                            </li>
+                            <li>
+                                <a class="search" href="{% url 'music_search:index' %}">Search</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <div class="banner-info">
+                <h1>Just music. Just for you</h1>
+                <div class="banner">
+                    <h2>Magazine</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse in magna vel felis cursus fringilla at eu nisl. Aliquam erat volutpat. Nulla porta gravida felis eu efficitur. Pellentesque dapibus lobortis magna, at elementum libero. In fermentum nisi a dui sollicitudin posuere. Vivamus bibendum lacus a mauris vulputate, et maximus justo interdum. Nulla et imperdiet lectus, quis ultricies magna. Donec auctor gravida sodales.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="popular-section">
+                <h1>Popular search list</h1>
+                
+            </div>
+        </section>
+    </main>
+    <footer class="main-footer">
+            <nav>
+                <ul class="main-footer__links">
+                    <li class="main-footer__link">
+                        <a href="search.html" >search</a>
+                    </li>
+                    <li class="main-footer__link">
+                        <a href="index.html" >home
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+    </footer>
 </body>
 </html>
