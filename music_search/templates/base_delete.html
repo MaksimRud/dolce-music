@@ -1,0 +1,46 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+	<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "music_search/css/style.css" %}"  type="text/css">
+    {% block title %}<title>Sections Title</title>{% endblock %}
+    
+</head>
+<body>
+    <div class="section-wrapper"></div>
+    {% block menu %}
+    <header>
+        <div class="header">
+            <nav class="header-nav">
+                <ul class="header-nav__items">
+                    <li class="header-nav__item">
+                        <a class="home" href="/">Dolce Music</a> 
+                    </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:period' %}">Periods</a>
+                    </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:compouser' %}">Compousers</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% endblock %}
+    <section>
+        <form action="" method="post">{% csrf_token %}
+            {% block form_delete %}
+            <p>Are you sure you want to delete "{{ object }}"?</p>
+            {% endblock %}
+            <input type="submit" value="Confirm"/>
+        </form>
+    </section>
+</body>
+</html>

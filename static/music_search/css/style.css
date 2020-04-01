@@ -35,14 +35,14 @@ li {
 	height: 50px;
 }
 
-.header-nav .header-nav__items{
+.header-nav .header-nav__items {
 	height: 50px;
 	line-height: 50px;
 	display: inline-block;
 	vertical-align: middle;
 }
 
-.header-nav__item{
+.header-nav__item {
 	padding-left: 10px;
 }
 
@@ -55,8 +55,6 @@ li {
 .header-nav a.home:hover {
 	color: #333333;
 }
-
-
 
 .header-nav a {
 	font-family: 'Montserrat', sans-serif;
@@ -73,7 +71,7 @@ li {
 section {
 	position: relative;
 	margin: 0 auto;
-	max-width: 960px;
+	max-width: 1200px;
 	padding: 70px 150px 100px 150px;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 	background-color: #ffffff;
@@ -110,6 +108,7 @@ a.button:hover {
 	border-collapse: collapse;
 	margin: 25px 0;
 	width: 100%;
+	table-layout: fixed;
 	font-size: 1.5em;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 }
@@ -140,7 +139,6 @@ a.button:hover {
 }
 
 .db-table .db-table__action {
-	width: 100%;
 	text-align: center;
 }
 

@@ -25,9 +25,19 @@
             <thead>
                 <tr>
                 {% for key in header %}
-                    <th>
-                        {{key}}
-                    </th>
+                    {% if key == "birth_date" %}
+                        <th>
+                            {{'birth date'}}
+                        </th>
+                    {% elif key == "death_date" %}
+                        <th>
+                            {{'death date'}}
+                        </th>
+                    {% else %}
+                        <th>
+                            {{key}}
+                        </th>
+                    {% endif %}
                 {% endfor %}
                     <th>
                         action
@@ -61,7 +71,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a>
+                                    <a href="{% url 'music_search:delete_compouser' compouser.id %}">
                                         Delete
                                     </a>
                                     
