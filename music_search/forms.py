@@ -1,9 +1,9 @@
 from django import forms
 from django.core.validators import RegexValidator
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.forms import ModelForm
 from .validators import *
 from .models import *
-
 
 class PeriodForm(ModelForm):
     name = forms.CharField(widget=forms.TextInput(
@@ -36,7 +36,7 @@ class CompousersForm(ModelForm):
         widget=forms.DateInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = Compousers
+        model = Compouser
         fields = '__all__'
 
     def clean(self):
@@ -44,6 +44,20 @@ class CompousersForm(ModelForm):
         name = cleaned_data.get("name")
         birth_date = cleaned_data.get("birth_date")
         death_date = cleaned_data.get("death_date")
+
+class MusicForm(ModelForm):
+    name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', }), validators=[RegexValidator(regex='\w+')])
+    year_written = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control'}))
+    class Meta:
+        model = PieceOfMusic
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super(MusicForm, self).clean()
+        name = cleaned_data.get("name")
+        year_written = cleaned_data.get("year_written")
 
 
 '''class PeriodEditFrom(forms.Form):

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='Audio',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('audio_rec', models.FilePathField(blank=True, db_column='Audio_rec', null=True, path=music_search.models.audio_path)),
+                ('audio_rec', models.FileField(blank=True, db_column='Audio_rec', null=True)),
             ],
             options={
                 'db_table': 'audio',
@@ -243,7 +243,7 @@ class Migration(migrations.Migration):
             name='Sheet',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sheet', models.FilePathField(db_column='Sheet', path=music_search.models.images_path)),
+                ('sheet', models.FileField(db_column='Sheet')),
             ],
             options={
                 'db_table': 'sheet',

@@ -9,9 +9,9 @@
 	<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static "music_search/css/style.css" %}"  type="text/css">
     {% block title %}<title>Sections Title</title>{% endblock %}
-    
 </head>
 <body>
     <div class="section-wrapper"></div>
@@ -29,6 +29,9 @@
                     <li class="header-nav__item">
                         <a href="{% url 'music_search:compouser' %}">Compousers</a>
                     </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:music' %}">Music</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -37,9 +40,9 @@
     <section>
         <form action="" method="post">{% csrf_token %}
             {% block form_delete %}
-            <p>Are you sure you want to delete "{{ object }}"?</p>
+            <p style = "font-family: 'Montserrat', sans-serif; font-size: x-large;">Are you sure you want to delete "{{ object }}"?</p>
             {% endblock %}
-            <input type="submit" value="Confirm"/>
+            <input class="btn btn-primary" type="submit" value="Confirm"/>
         </form>
     </section>
 </body>

@@ -9,6 +9,11 @@ from django.db import models
 from django.forms import ModelForm
 from django.urls import reverse
 from django.core.validators import RegexValidator
+from django.conf import settings
+from django.contrib.auth.models import (
+    AbstractBaseUser, BaseUserManager
+)
+import os
 from .validators import *
 
 
@@ -32,7 +37,7 @@ class Period(models.Model):
         db_table = 'period'
 
 
-class Compousers(models.Model):
+class Compouser(models.Model):
     # Field name made lowercase.
     name = models.CharField(db_column='Name', unique=True, max_length=45)
     # Field name made lowercase.
@@ -52,7 +57,7 @@ class Compousers(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'compousers'
+        db_table = 'compouser'
         unique_together = (('id', 'period'),)
 
 
@@ -75,7 +80,7 @@ class PieceOfMusic(models.Model):
     year_written = models.DateField(db_column='Year_written')
     # Field name made lowercase.
     compousers = models.ForeignKey(
-        Compousers, on_delete=models.CASCADE, db_column='Compousers_id')
+        Compouser, on_delete=models.CASCADE, db_column='Compousers_id')
     # Field name made lowercase.
     type_of_piece = models.ForeignKey(
         TypeOfPiece, on_delete=models.CASCADE, db_column='Type_of_piece_id')
@@ -83,33 +88,35 @@ class PieceOfMusic(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('music_search:detail_music', kwargs={'pk': self.pk})
+
     class Meta:
         managed = False
         db_table = 'piece_of_music'
         unique_together = (('id', 'compousers', 'type_of_piece'),)
 
-
-class Instrument(models.Model):
-    # Field name made lowercase.
-    name = models.CharField(db_column='Name', unique=True, max_length=45)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        managed = False
-        db_table = 'instrument'
-
-
 class Part(models.Model):
     # Field name made lowercase.
-    name = models.CharField(db_column='Name', max_length=45)
+    name = models.CharField(
+        db_column='Name', 
+        max_length=45
+    )
     # Field name made lowercase.
     piece_of_music = models.ForeignKey(
-        PieceOfMusic, on_delete=models.CASCADE, db_column='Piece_of_Music_id')
+        PieceOfMusic, 
+        on_delete=models.CASCADE, 
+        db_column='Piece_of_Music_id'
+    )
     instruments = models.ManyToManyField(
-        Instrument,
-        through='InstrumentHasPart', through_fields=('part', 'instrument'),
+        'Instrument',
+        through='InstrumentHasPart', 
+        through_fields=('part', 'instrument'),
+    )
+    audios = models.ManyToManyField(
+        'Audio', 
+        through='AudioHasPart', 
+        through_fields=('part', 'audio')
     )
 
     def __str__(self):
@@ -120,49 +127,42 @@ class Part(models.Model):
         db_table = 'part'
         unique_together = (('id', 'piece_of_music'),)
 
-
-def images_path():
-    return os.path.join(settings.STATIC_ROOT, 'img')
-
-
-class Sheet(models.Model):
+class Instrument(models.Model):
     # Field name made lowercase.
-    sheet = models.FilePathField(path=images_path, db_column='Sheet')
-    # Field name made lowercase.
-    part = models.ForeignKey(
-        Part, on_delete=models.CASCADE, db_column='Part_id')
+    name = models.CharField(db_column='Name', unique=True, max_length=45)
+    
+    parts = models.ManyToManyField(Part, through='InstrumentHasPart', through_fields=('instrument', 'part'))
 
     def __str__(self):
-        return self.id
+        return self.name
 
     class Meta:
         managed = False
-        db_table = 'sheet'
-
-
-def audio_path():
-    return os.path.join(settings.STATIC_ROOT, 'audio')
-
+        db_table = 'instrument'
 
 class Audio(models.Model):
     # Field name made lowercase.
-    audio_rec = models.FilePathField(
-        path=audio_path, db_column='Audio_rec', blank=True, null=True)
-    parts = models.ManyToManyField(
-        Part, through='AudioHasPart', through_fields=('audio', 'part')),
+    audio_rec = models.FileField(db_column='Audio_rec')
+    
+    parts = models.ManyToManyField(Part, through='AudioHasPart', through_fields=('audio', 'part'))
 
     class Meta:
         managed = False
-        db_table = 'audio'
-
+        db_table = 'audio'        
 
 class AudioHasPart(models.Model):
     # Field name made lowercase.
     audio = models.ForeignKey(
-        Audio, on_delete=models.CASCADE, db_column='Audio_id')
+        Audio, 
+        on_delete=models.CASCADE, 
+        db_column='Audio_id'
+    )
     # Field name made lowercase.
-    part = models.ForeignKey(Part, on_delete=models.CASCADE,
-                             db_column='Part_id')
+    part = models.ForeignKey(
+        Part, 
+        on_delete=models.CASCADE,
+        db_column='Part_id'
+    )
 
     class Meta:
         managed = False
@@ -171,17 +171,36 @@ class AudioHasPart(models.Model):
 
 
 class InstrumentHasPart(models.Model):
+    
     # Field name made lowercase.
+    part = models.ForeignKey(
+        Part, 
+        on_delete=models.CASCADE,
+        db_column='Part_id'
+    )
+
     instrument = models.ForeignKey(
-        Instrument, on_delete=models.CASCADE, db_column='Instrument_id')
-    # Field name made lowercase.
-    part = models.ForeignKey('Part', on_delete=models.CASCADE,
-                             db_column='Part_id')
+        Instrument, 
+        on_delete=models.CASCADE, 
+        db_column='Instrument_id'
+    )
 
     class Meta:
         managed = False
         db_table = 'instrument_has_part'
         unique_together = (('instrument', 'part'),)
+
+
+class Sheet(models.Model):
+    # Field name made lowercase.
+    sheet = models.FileField(db_column='Sheet', upload_to='sheet/%Y/%m/%d/')
+    # Field name made lowercase.
+    music = models.ForeignKey(
+        PieceOfMusic, on_delete=models.CASCADE, db_column='Music_id')
+
+    class Meta:
+        managed = False
+        db_table = 'sheet'
 
 
 class MusicianOrOrcestra(models.Model):
@@ -197,6 +216,92 @@ class MusicianOrOrcestra(models.Model):
     class Meta:
         managed = False
         db_table = 'musician or orcestra'
+##
+#
+#   USERS
+#
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, is_staff=False, is_admin=False, is_active=True):
+        if not email:
+            raise ValueError("Users must have an email address")
+        if not password:
+            raise ValueError("Users must have an password")
+        user_obj = self.model(
+            email = self.normalize_email(email)
+        )
+        user_obj.set_password(password)
+        user_obj.staff = is_staff
+        user_obj.admin = is_admin
+        user_obj.active = is_active
+        user_obj.save(using=self._db)
+        return user_obj
+
+    def create_staffuser(self, email, password=None):
+        user_obj =self.create_user(
+            email,
+            password=password,
+            is_staff=True
+        )
+        return user_obj
+
+    def create_superuser(self, email, password=None):
+        user_obj =self.create_user(
+            email,
+            password=password,
+            is_staff=True,
+            is_admin=True
+        )
+        return user_obj
+    
+    def get_by_natural_key(self, email_):
+        return self.get(email=email_)
+
+class User(AbstractBaseUser):
+    email = models.EmailField(max_length=255, unique = True)
+    active = models.BooleanField(default=True) #can login
+    staff = models.BooleanField(default=False) #staff non superuser
+    admin = models.BooleanField(default=False) #admin
+    # full_name = models.CharField(max_length=255, blank=True, null=True) #superuser
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email' #username
+    # email and password are required by default
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
+
+    def get_full_name(self):
+        return self.email
+
+    def get_short_name(self):
+        return self.email
+    
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_lable):
+        return True
+    
+
+    @property
+    def is_staff(self):
+        return self.staff
+
+    @property
+    def is_admin(self):
+        return self.admin
+
+    @property 
+    def is_active(self):
+        return self.active
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # extend extra data
 
 ##
 #

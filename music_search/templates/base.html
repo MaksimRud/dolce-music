@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static "music_search/css/style.css" %}"  type="text/css">
     {% block title %}<title>Sections Title</title>{% endblock %}
     
@@ -27,6 +28,9 @@
                     </li>
                     <li class="header-nav__item">
                         <a href="{% url 'music_search:compouser' %}">Compousers</a>
+                    </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:music' %}">Music</a>
                     </li>
                 </ul>
             </nav>

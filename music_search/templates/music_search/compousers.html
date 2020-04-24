@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     {% block title %}<title>{{section}}</title>{% endblock %}
     <link rel="stylesheet" href="{% static "music_search/css/style.css" %}" type="text/css">
 </head>
@@ -18,6 +19,25 @@
         {% block create_button %}
             <a href="{% url 'music_search:create_compouser' %}" class="button" >Create Compouser</a>
         {% endblock %}
+        {% block excel_button %}
+            <form action="" method = "GET"> 
+                {% csrf_token %}
+                <a href="{% url 'music_search:excel_compouser' %}" class="button" download>Get Excel</a>
+            </form>
+        {% endblock %}
+        {% block up_excel_button %}
+        <div class="upload-excel-button-wrapper">
+            <form action={% url 'music_search:post_excel_compouser' %} method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <button type="submit" class="button-upload">Upload</button>
+                <input type="file" name="excel-file" id="excel-file" class="inputfile">
+                <label for="excel-file">Choose a file</label>
+            </form>
+        </div>
+        {% endblock %}
+        {% if uploaded_file_url %}
+            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+        {% endif %}
         {% if compousers_list %}
         {% block table %}
         <table class="db-table">

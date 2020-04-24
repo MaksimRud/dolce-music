@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load static %} 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "music_search/css/style.css" %}" type="text/css">
+    <title>{{object.name}}</title>  
+</head>
+<body>
+    <div class="section-wrapper"></div>
+    <header>
+        <div class="header">
+            <nav class="header-nav">
+                <ul class="header-nav__items">
+                    <li class="header-nav__item">
+                        <a class="home" href="/">Dolce Music</a> 
+                    </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:period' %}">Periods</a>
+                    </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:compouser' %}">Compousers</a>
+                    </li>
+                    <li class="header-nav__item">
+                        <a href="{% url 'music_search:music' %}">Music</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section>
+        <h3 class="table-name">Parts</h3>
+
+        <ul class="parts__items">
+            {% for name in parts_name %}
+                <li class="parts__item">
+                    <p class="detail-items">{{ name }}</p>
+                </li>      
+            {% endfor %}
+        </ul>            
+        
+        <ul class="audio__items">
+            {% for aud in audio %}
+                <li>
+                    <audio  id="audio" controls>
+                        <source src="../../../media/{{aud}}"  type="audio/mpeg">
+                    </audio>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <ul class="sheet__items">
+            {% for sh in sheet %}
+                <li class="sheet__item">
+                    <a href="../../../media/{{sh}}" class="button" target="_blank" type="application/pdf">Get Sheet Music</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</body>
+<script>
+</script>
+</html>

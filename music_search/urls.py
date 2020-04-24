@@ -1,4 +1,7 @@
 from django.urls import path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -17,6 +20,8 @@ urlpatterns = [
     path('periods/<int:pk>/delete',
          views.CompousersDelete.as_view(), name='delete_period'),
     # compousers path
+    path('compousers/downl', views.get_comp_file, name='excel_compouser'),
+    path('compousers/excel_upd', views.post_comp_file, name='post_excel_compouser'),
     path('compousers/', views.CompousersView.as_view(), name='compouser'),
     path('compousers/<int:pk>/details',
          views.CompousersDetailView.as_view(), name='detail_compouser'),
@@ -25,5 +30,17 @@ urlpatterns = [
     path('compousers/create_compouser', views.CompousersCreate.as_view(),
          name='create_compouser'),
     path('compousers/<int:pk>/delete',
-         views.CompousersDelete.as_view(), name='delete_compouser')
+         views.CompousersDelete.as_view(), name='delete_compouser'),
+     # music path
+     path('music/downl', views.get_music_file, name='excel_music' ),
+     path('music/excel_upd', views.post_music_file, name='post_excel_music'),
+     path('music/', views.PieceOfMusicView.as_view(), name='music'),
+     path('music/<int:pk>/details', views.MusicDetailView.as_view(), name='detail_music'),
+     path('music/<int:pk>/edit', views.PieceOfMusicUpdate.as_view(), name='edit_music'),
+     path('music/create_music', views.PieceOfMusicCreate.as_view(), name='create_music'),
+     path('music/<int:pk>/edit', views.PieceOfMusicDelete.as_view(), name='delete_music')
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

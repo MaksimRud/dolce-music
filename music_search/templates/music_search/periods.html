@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    {% block title %}<title>{{section}}</title>{% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static "music_search/css/style.css" %}" type="text/css">
+    {% block title %}<title>{{section}}</title>{% endblock %}
 </head>
 <body>
     <section>
@@ -23,11 +24,14 @@
             </form>
         {% endblock %}
         {% block up_excel_button %}
+        <div class="upload-excel-button-wrapper">
             <form action={% url 'music_search:post_excel_period' %} method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="file" name="excel_file" class="button">
-                <button type="submit" class="button">Upload</button>
+                <button type="submit" class="button-upload">Upload</button>
+                <input type="file" name="excel-file" id="excel-file" class="inputfile">
+                <label for="excel-file">Choose a file</label>
             </form>
+        </div>
         {% endblock %}
         {% if uploaded_file_url %}
             <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>

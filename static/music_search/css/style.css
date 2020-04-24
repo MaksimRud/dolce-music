@@ -1,10 +1,10 @@
 html {
-	height: 2000px;
+	height: 100%;
 }
 
 body {
 	margin: 0;
-	height: 100%;
+	min-height: 100%;
 }
 
 header {
@@ -14,6 +14,8 @@ header {
 	width: 100%;
 	z-index: 2;
 }
+
+
 
 ul {
 	margin: 0;
@@ -29,6 +31,26 @@ ul a {
 
 li {
 	display: inline;
+}
+
+.audio__items{
+	padding: 0;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.sheet__items{
+	padding: 0;
+}
+
+/* music detail */
+
+.detail-items{
+	font-family: 'Roboto';
+}
+
+.parts__items{
+	padding: 0;
 }
 
 .header {
@@ -63,7 +85,7 @@ li {
 .section-wrapper {
 	position: fixed;
 	width: 100%;
-	height: 2000px;
+	height: 100%;
 	background-color: rgb(219, 228, 238);
 	z-index: 0;
 }
@@ -96,6 +118,73 @@ a.button:hover {
 	color: #333333;
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 600;
+	border: 3px  #333333;
+}
+
+.features-buttons{
+	padding: 0;
+}
+
+.button{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.upload-excel-button-wrapper{
+	position: relative;
+  	overflow: hidden;
+  	display: inline-block;
+}
+
+.button-upload{
+	border: 2px solid #333333;
+  	color: #333333;
+  	background-color: white;
+  	padding: 5px;
+  	border-radius: 8px;
+  	font-size: 1rem;
+  	font-weight: bold;
+}
+
+.upload-btn-wrapper input[type=file] {
+	font-size: 100px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+}
+
+.inputfile{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label{
+	font-size: 1rem;
+	font-family: 'Montserrat', sans-serif;
+	padding: 5px;
+	border-radius: 5px;
+	color: white;
+	background-color: #333333;
+	display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover{
+	background-color: red;
+}
+
+.inputfile:focus + label{
+	outline: 1px dotted #000000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile + lable{
+	cursor: pointer;
 }
 
 .table-name {
