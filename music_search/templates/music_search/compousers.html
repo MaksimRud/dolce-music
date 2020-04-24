@@ -93,21 +93,20 @@
                                 <li>
                                     <a href="{% url 'music_search:delete_compouser' compouser.id %}">
                                         Delete
-                                    </a>
-                                    
-                                </li>
+                                    </a> 
+                                </li> 
                             </ul> 
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-            {% endblock %}    
-        </table>
-        <div id="chart-container">{{ chart_compousers|safe }}</div>
-        {% endblock %}
-        {% else %}
-            <p>No polls are available.</p>
-        {% endif %}
-    </section>
-</body>
-</html>
+                        </td> 
+                    </tr> 
+                {% endfor %} 
+            </tbody> 
+            {% endblock %} 
+        </table> 
+        <div id="chart-container">{{ chart_compousers|safe }}</div> 
+        {% endblock %} 
+        {% else %} 
+            <p>No compousers are available.</p>
+        {% endif %} 
+    </section> 
+</body> 
+</html> 

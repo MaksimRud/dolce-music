@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'music_search',
+    'accounts',
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django_extensions',
     'django-dia',
-    'music_search',
     'widget_tweaks',
 ]
 
@@ -49,7 +50,16 @@ GRAPH_MODELS = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-AUTH_USER_MODEL = 'music_search.User' #changes the built-in user model to urs 
+AUTH_USER_MODEL = 'accounts.User' #changes the built-in user model to urs 
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/log/login'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mr.freiermann01@gmail.com'
+EMAIL_HOST_PASSWORD = 'weihnachtsmann2001'
+EMAIL_PORT = 587
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

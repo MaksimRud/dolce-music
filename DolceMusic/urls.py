@@ -22,6 +22,7 @@ from . import views
 urlpatterns = [
     path('search/', include('music_search.urls')),
     path('admin/', admin.site.urls),
+    path('log/', include('accounts.urls')),
     path('', views.home, name='home'),
 ]
 

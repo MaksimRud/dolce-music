@@ -13,7 +13,7 @@
     <title>Edit</title>
 </head>
 <body>
-   
+    {% block head %}
     <header>
         <div class="header">
             <nav class="header-nav">
@@ -34,10 +34,15 @@
             </nav>
         </div>
     </header>
+    {% endblock %}
     <main>
         <section>
             <div>
-                <h1>Edit</h1>
+                {% block header %}
+
+                  <h1>Edit</h1>
+
+                {% endblock %}
                 {% block from_edit %}
                 <form method="post" novalidate>
                     {% csrf_token %}

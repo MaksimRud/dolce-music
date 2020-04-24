@@ -8,18 +8,24 @@ from django.views import generic
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.template.defaulttags import register
+
 import openpyxl
 import io
 import xlsxwriter
 from django.utils.translation import ugettext
+from .fusioncharts import FusionCharts
+import re
 
 from .forms import *
 from .models import *
 from django.db.models import Count
-from .fusioncharts import FusionCharts
-#from .forms import PeriodEditFrom
-# Create your views here.
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .decorators import admin_required
 
+
+@login_required
 def index(request):
     return TemplateResponse(request, 'search.html', {})
 
@@ -30,13 +36,44 @@ def home_view(request):
 
     return render(request, 'music_search/index.html', context)
 
+def validate_period(value):
+    characters = value.split('-')
+    check = True
 
-class PeriodView(generic.ListView):
+    if len(characters) != 2:
+        return False
+
+    first_date = characters[0]
+    second_date = characters[1]
+
+    if not first_date.isdigit() or not second_date.isdigit():
+        return False
+    else:
+        first_date = int(first_date)
+        second_date = int(second_date)
+
+    if first_date >= second_date:
+        check = False
+
+    if second_date - first_date > 500:
+        check = False
+
+    return check
+
+def validate_date(value):
+    check = False
+    if re.match(r"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))", value):
+        check = True
+    return check
+
+class PeriodView(LoginRequiredMixin, generic.ListView):
     model = Period
     template_name = 'music_search/periods.html'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super(PeriodView, self).get_context_data(**kwargs)
+
         period_values = Period.objects.order_by(
             'time_of_period').values('time_of_period', 'name', 'id')
         context['period_list'] = Period.objects.order_by('time_of_period')
@@ -44,11 +81,11 @@ class PeriodView(generic.ListView):
         context['content_period'] = list(period_values)
         return context
 
-
+@admin_required
 def post_per_file(request):
     periods = Period.objects.all()
     period_values = Period.objects.order_by(
-        'time_of_period').values('time_of_period', 'name', 'id')
+        'time_of_period').values('time_of_period', 'name', 'descr', 'id')
     
     template_name = 'music_search/periods.html'
 
@@ -57,49 +94,61 @@ def post_per_file(request):
         fs = FileSystemStorage()
         filename = fs.save(excel_file.name, excel_file)
         uploaded_file_url = fs.url(filename)
+
         wb = openpyxl.load_workbook(excel_file)
-        print(request)
+
         worksheet = wb[wb.sheetnames[0]]
-        print(worksheet)
 
         period_name = [period['name'] for period in period_values]
+        period_year = [period['time_of_period'] for period in period_values]
+        period_descr = [period['descr'] for period in period_values]
 
-        for index in worksheet.iter_cols(min_row=1, max_col=1, values_only=True):
-            print(index)
-            for cell in index:
-                print(cell)
-            i = 0
-            for data in worksheet.iter_rows(min_row=1, max_col=4, values_only=True):
-                print("Row ", i, " is ", data)
-                if i == 0:
-                    i += 1
-                    continue
+        
+        i = 0
+        for data in worksheet.iter_rows(min_row=1, max_col=4, values_only=True):
+    
+            if i == 0:
                 i += 1
-                name = data[1]
-                print("Name: " + name)
-                if name == None:
-                    break
-                elif name not in period_name:
-                    print("name is not in a database.. update!")
+                continue
+            i += 1
+
+            name = data[1]
+
+            if name == None:
+                break
+
+            elif name not in period_name:
+
+                if (data[2] in period_year or data[3] in period_descr):
+                    continue
+                elif not validate_period(data[2]):
+                    continue
+                else:
+
                     new_model = {
-                        'name': data[1], 'time_of_period': data[2], 'descr': data[3]}
+                        'name': data[1], 
+                        'time_of_period': data[2], 
+                        'descr': data[3]
+                    }
+
                     p = Period(**new_model)
                     p.save()
-                else:
-                    print("name is in database")
-                    print(period_values)
-                    for period in period_values:
-                        print(period)
-                        if name != period['name']:
-                            print(name + " is not in " + period['name'])
+            else:
+                for period in period_values:
+                    if name != period['name']:
+                        continue
+
+                    else:
+                        if (data[2] in period_values or data[3] in period_values):
                             continue
-                        else:
-                            print(name + " is in a period. May be edited")
+                        if validate_period(data[2]):
+    
                             time_of_period = data[2]
                             descr = data[3]
+
                             Period.objects.filter(pk=period['id']).update(
                                 time_of_period=time_of_period, descr=descr)
-                            print(name + "Was changed")
+
     period_values = Period.objects.order_by(
         'time_of_period').values('time_of_period', 'name', 'id')
     header = list(period_values[0].keys())[:-1]
@@ -113,6 +162,7 @@ def post_per_file(request):
         'content_period': content_period,
         'period_list': period_list
     })
+
 
 def get_per_file(request):
     periods = Period.objects.all()
@@ -173,9 +223,10 @@ def get_per_file(request):
     return response
 
 
-class CompousersView(generic.ListView):
+class CompousersView(LoginRequiredMixin, generic.ListView):
     model = Compouser
     template_name = 'music_search/compousers.html'
+    login_url = '/login/'
 
     def chart(self):
         dataSource = {}
@@ -189,6 +240,7 @@ class CompousersView(generic.ListView):
             "decimals": "0",
             "theme": "fusion"
         }
+
         dataSource['data'] = []
 
         for key in Period.objects.annotate(num_compousers=Count('compouser')):
@@ -207,16 +259,19 @@ class CompousersView(generic.ListView):
         compouser_values = Compouser.objects.order_by(
             'birth_date').values('name', 'birth_date', 'death_date', 'id')
         index = 0
+
         for comp in compouser_values:
             c = Compouser.objects.get(pk=comp['id'])
             compouser_values[index]['period'] = c.period.name
             del compouser_values[index]['id']
             compouser_values[index]['id'] = c.id
             index += 1
+
         context['compousers_list'] = Compouser.objects.order_by('birth_date')
         context['header'] = list(compouser_values[0].keys())[:-1]
         context['content_compousers'] = list(compouser_values)
         context['chart_compousers'] = self.chart().render()
+
         return context
 
 def get_comp_file(request):
@@ -279,11 +334,13 @@ def get_comp_file(request):
     response['Content-Disposition'] = 'attachment; filename=Report.xlsx'
     return response
 
+@admin_required
 def post_comp_file(request):
     comp = Compouser.objects.all()
     comp_values = Compouser.objects.order_by(
         'birth_date').values('name', 'birth_date', 'death_date', 'id')
-    
+    period_values = Period.objects.order_by(
+            'time_of_period').values('time_of_period', 'name', 'id')
     template_name = 'music_search/compousers.html'
 
     if request.method == 'POST' and request.FILES['excel-file']:
@@ -292,60 +349,71 @@ def post_comp_file(request):
         filename = fs.save(excel_file.name, excel_file)
         uploaded_file_url = fs.url(filename)
         wb = openpyxl.load_workbook(excel_file)
-        print(request)
+        
         worksheet = wb[wb.sheetnames[0]]
-        print(worksheet)
+        
 
         compouser = [comp['name'] for comp in comp_values]
+        
+        
+        i = 0
 
-        for index in worksheet.iter_cols(min_row=1, max_col=1, values_only=True):
-            print(index)
-            for cell in index:
-                print(cell)
-            i = 0
-            for data in worksheet.iter_rows(min_row=1, max_col=5, values_only=True):
-                print("Row ", i, " is ", data)
-                if i == 0:
-                    i += 1
-                    continue
+        for data in worksheet.iter_rows(min_row=1, max_col=5, values_only=True):
+
+            if i == 0:
                 i += 1
-                name = data[1]
-                print("Name: " + name)
-                if name == None:
-                    break
-                elif name not in compouser:
-                    print("name is not in a database.. update!")
-                    period_name = [period['name'] for period in period_values]
-                    if data[4] not in period_name:
-                        break
-                    p = Period.objects.get(name = data[4])
-                    new_model = {
-                        'name': data[1], 
-                        'birth_date': data[2], 
-                        'death_date': data[3], 
-                        'period': p.id
-                    }
-                    p = Compouser(**new_model)
-                    p.save()
-                else:
-                    print("name is in database")
-                    print(comp_values)
-                    for c in comp_values:
-                        print(c)
-                        if name != c['name']:
-                            print(name + " is not in " + c['name'])
+                continue
+
+            i += 1
+
+            name = data[1]
+            period_name = [period['name'] for period in period_values]
+
+            if name == None:
+                break
+            elif name not in compouser:
+            
+                if data[4] not in period_name  or not validate_date(str(data[2])) or not validate_date(str(data[3])):
+                    continue
+
+                p = Period.objects.get(name = data[4])
+
+                new_model = {
+                    'name': data[1], 
+                    'birth_date': data[2], 
+                    'death_date': data[3], 
+                    'period': p 
+                }
+
+                c = Compouser(**new_model)
+                c.save()
+
+            else:
+        
+                for c in comp_values:
+
+                    if name != c['name']:
+                        continue
+
+                    else:
+                        birth_date = data[2]
+                        death_date = data[3]
+
+                        if data[4] not in period_name or not validate_date(str(birth_date)) or not validate_date(str(death_date)):
                             continue
-                        else:
-                            print(name + " is in a period. May be edited")
-                            birth_date = data[2]
-                            death_date = data[3]
-                            period = data[4]
-                            p = Period.objects.get(name = period)
-                            Compouser.objects.filter(pk=c['id']).update(
-                                birth_date=birth_date, death_date=death_date, period=p.id)
-                            print(name + "Was changed")
+
+                        period = data[4]
+                        p = Period.objects.get(name = period)
+
+                        Compouser.objects.filter(pk=c['id']).update(
+                            birth_date=birth_date, 
+                            death_date=death_date, 
+                            period=p
+                        )
+
     compouser_values = Compouser.objects.order_by(
         'birth_date').values('name', 'birth_date', 'death_date', 'id')
+
     index = 0
     for comp in compouser_values:
         c = Compouser.objects.get(pk=comp['id'])
@@ -353,6 +421,7 @@ def post_comp_file(request):
         del compouser_values[index]['id']
         compouser_values[index]['id'] = c.id
         index += 1
+
     header = list(compouser_values[0].keys())[:-1]
     content_compouser = list(compouser_values)
     print(content_compouser)
@@ -365,9 +434,10 @@ def post_comp_file(request):
         'compousers_list': compouser_list
     })
 
-class PieceOfMusicView(generic.ListView):
+class PieceOfMusicView(LoginRequiredMixin, generic.ListView):
     model = PieceOfMusic
     template_name = 'music_search/music.html'
+    login_url = '/login/'
 
     def chart(self):
         dataSource = {}
@@ -399,7 +469,7 @@ class PieceOfMusicView(generic.ListView):
         music_values = PieceOfMusic.objects.order_by(
             'year_written').values('name', 'year_written', 'id')
         index = 0
-        print(music_values)
+        
         for mus in music_values:
             m = PieceOfMusic.objects.get(pk=mus['id'])
             music_values[index]['compouser'] = m.compousers.name
@@ -408,10 +478,12 @@ class PieceOfMusicView(generic.ListView):
             del music_values[index]['id']
             music_values[index]['id'] = m.id
             index += 1
+
         context['music_list'] = PieceOfMusic.objects.order_by('year_written')
         context['header'] = list(music_values[0].keys())[:-1]
         context['content_music'] = list(music_values)
         context['chart_music'] = self.chart().render()
+
         return context
 
 def get_music_file(request):
@@ -476,7 +548,9 @@ def get_music_file(request):
     response['Content-Disposition'] = 'attachment; filename=Report.xlsx'
     return response
 
+@admin_required
 def post_music_file(request):
+
     music = PieceOfMusic.objects.all()
     music_values = PieceOfMusic.objects.order_by(
             'year_written').values('name', 'year_written', 'compousers', 'id')
@@ -486,73 +560,84 @@ def post_music_file(request):
     template_name = 'music_search/music.html'
     
     if request.method == 'POST' and request.FILES['excel-file']:
+
         excel_file = request.FILES['excel-file']
+
         fs = FileSystemStorage()
         filename = fs.save(excel_file.name, excel_file)
         uploaded_file_url = fs.url(filename)
         wb = openpyxl.load_workbook(excel_file)
-        print(request)
+
         worksheet = wb[wb.sheetnames[0]]
-        print(worksheet)
 
         music_name = [mus['name'] for mus in music_values]
         comp_name = [comp['name'] for comp in comp_values]
         type_name = [t['name'] for t in type_]
 
-        for index in worksheet.iter_cols(min_row=1, max_col=1, values_only=True):
-            print(index)
-            for cell in index:
-                print(cell)
-            i = 0
-            for data in worksheet.iter_rows(min_row=1, max_col=5, values_only=True):
-    
-                if i == 0:
-                    i += 1
-                    continue
+       
+        i = 0
+        for data in worksheet.iter_rows(min_row=1, max_col=5, values_only=True):
+
+            if i == 0:
                 i += 1
-                name = data[1]
-            
-                if name == None:
-                    break
-                elif name not in music_name:
-                    print("name is not in a database.. update!")
-                    
-                    if data[3] not in comp_name or data[4] not in type_name:
-                        break
-                    t = TypeOfPiece.objects.get(name = data[4])
-                    c = Compouser.objects.get(name = data[3])
-                    new_model = {
-                        'name': data[1], 
-                        'year_written': data[2], 
-                        'compouser': c.id, 
-                        'type': t.id
-                    }
-                    p = PieceOfMusic(**new_model)
-                    p.save()
-                else:
-                    for c in music_values:
-                        print(c)
-                        if name != c['name']:
-                            print(name + " is not in " + c['name'])
+                continue
+            i += 1
+
+            name = data[1]
+        
+            if name == None:
+                break
+
+            elif name not in music_name:
+                
+                if data[3] not in comp_name or data[4] not in type_name or validate_date(str(data[2])):
+                    continue
+
+                t = TypeOfPiece.objects.get(name = data[4])
+                c = Compouser.objects.get(name = data[3])
+
+                new_model = {
+                    'name': data[1], 
+                    'year_written': data[2], 
+                    'compousers': c, 
+                    'type_of_piece': t
+                }
+
+                p = PieceOfMusic(**new_model)
+                p.save()
+
+            else:
+                for c in music_values:
+
+                    if name != c['name']:
+                        continue
+                    else:
+
+                        if data[3] not in comp_name or data[4] not in type_name or not validate_date(str(data[2])):
                             continue
-                        else:
-                            print(name + " is in a period. May be edited")
-                            year_written = data[2]
-                            p = PieceOfMusic.objects.get(name = data[1])
-                            c = Compouser.objects.get(name = data[3])
-                            compouser_id = c.id
-                            t = TypeOfPiece.objects.get(name = data[4])
-                            type_of_piece_id = t.id
-                            PieceOfMusic.objects.filter(pk=p.id).update(
-                                year_written=year_written, 
-                                compousers_id=compouser_id, 
-                                type_of_piece_id=type_of_piece_id
-                            )
-                            print(name + "Was changed")
+
+                        year_written = data[2]
+
+                        p = PieceOfMusic.objects.get(name = data[1])
+                        c = Compouser.objects.get(name = data[3])
+
+                        compouser_id = c.id 
+
+                        t = TypeOfPiece.objects.get(name = data[4])
+
+                        type_of_piece_id = t.id
+
+                        PieceOfMusic.objects.filter(pk=p.id).update(
+                            year_written=year_written,
+                            compousers_id=c.id, 
+                            type_of_piece_id=t.id
+                        )
+
+                            
     music_values = PieceOfMusic.objects.order_by(
             'year_written').values('name', 'year_written', 'id')
     index = 0
-    print(music_values)
+    
     for mus in music_values:
         m = PieceOfMusic.objects.get(pk=mus['id'])
         music_values[index]['compouser'] = m.compousers.name
@@ -561,6 +646,7 @@ def post_music_file(request):
         del music_values[index]['id']
         music_values[index]['id'] = m.id
         index += 1
+
     music_list = PieceOfMusic.objects.order_by('year_written')
     header = list(music_values[0].keys())[:-1]
     content_music = list(music_values)
@@ -572,26 +658,29 @@ def post_music_file(request):
         'music_list': music_list
     })
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Period
     template_name = 'music_search/period_detail.html'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         return context
 
 
-class CompousersDetailView(generic.DetailView):
+class CompousersDetailView(LoginRequiredMixin, generic.DetailView):
     model = Compouser
     template_name = 'music_search/compousers_detail.html'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super(CompousersDetailView, self).get_context_data(**kwargs)
         return context
 
-class MusicDetailView(generic.DeleteView):
+class MusicDetailView(LoginRequiredMixin, generic.DeleteView):
     model = PieceOfMusic
     template_name = 'music_search/music_detail.html'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super(MusicDetailView, self).get_context_data(**kwargs)
@@ -616,61 +705,72 @@ class MusicDetailView(generic.DeleteView):
         context['sheet'] = sheet
         return context
 
-class PeriodCreate(CreateView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class PeriodCreate(LoginRequiredMixin, CreateView):
     model = Period
     form_class = PeriodForm
     template_name = 'music_search/period_create.html'
+    login_url = '/login/'
     #fields = ['time_of_period', 'name', 'descr']
 
-
-class PeriodUpdate(UpdateView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class PeriodUpdate(LoginRequiredMixin, UpdateView):
     model = Period
     form_class = PeriodForm
     template_name = 'music_search/period_edit.html'
+    login_url = '/login/'
 
-
-class PeriodDelete(DeleteView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class PeriodDelete(LoginRequiredMixin, DeleteView):
     model = Period
     template_name = 'music_search/period_delete.html'
+    login_url = '/login/'
 
     def get_success_url(self):
         return reverse('music_search:period')
 
-
-class CompousersCreate(CreateView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class CompousersCreate(LoginRequiredMixin, CreateView):
     model = Compouser
     form_class = CompousersForm
     template_name = 'music_search/compousers_create.html'
-    #fields = ['time_of_period', 'name', 'descr']
+    login_url = '/login/'
 
-
-class CompousersUpdate(UpdateView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class CompousersUpdate(LoginRequiredMixin, UpdateView):
     model = Compouser
     form_class = CompousersForm
     template_name = 'music_search/compousers_edit.html'
+    login_url = '/login/'
 
-
-class CompousersDelete(DeleteView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class CompousersDelete(LoginRequiredMixin, DeleteView):
     model = Compouser
     template_name = 'music_search/compousers_delete.html'
+    login_url = '/login/'
 
     def get_success_url(self):
         return reverse('music_search:compouser')
 
-class PieceOfMusicCreate(CreateView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class PieceOfMusicCreate(LoginRequiredMixin, CreateView):
     model = PieceOfMusic
     form_class = MusicForm
-    template_name = 'muisc_search/music_create.html'
+    template_name = 'music_search/music_create.html'
+    login_url = '/login/'
 
-class PieceOfMusicUpdate(UpdateView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class PieceOfMusicUpdate(LoginRequiredMixin, UpdateView):
     model = PieceOfMusic
     form_class = MusicForm
     template_name = 'music_search/music_edit.html'
+    login_url = '/login/'
 
-
-class PieceOfMusicDelete(DeleteView):
+@method_decorator([login_required, admin_required], name='dispatch')
+class PieceOfMusicDelete(LoginRequiredMixin, DeleteView):
     model = PieceOfMusic
     template_name = 'music_search/music_delete.html'
+    login_url = '/login/'
 
     def get_success_url(self):
         return reverse('music_search:music')

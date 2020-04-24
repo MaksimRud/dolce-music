@@ -18,7 +18,7 @@ urlpatterns = [
          views.PeriodUpdate.as_view(), name='edit_period'),
     path('periods/create', views.PeriodCreate.as_view(), name='create_period'),
     path('periods/<int:pk>/delete',
-         views.CompousersDelete.as_view(), name='delete_period'),
+         views.PeriodDelete.as_view(), name='delete_period'),
     # compousers path
     path('compousers/downl', views.get_comp_file, name='excel_compouser'),
     path('compousers/excel_upd', views.post_comp_file, name='post_excel_compouser'),
@@ -38,7 +38,7 @@ urlpatterns = [
      path('music/<int:pk>/details', views.MusicDetailView.as_view(), name='detail_music'),
      path('music/<int:pk>/edit', views.PieceOfMusicUpdate.as_view(), name='edit_music'),
      path('music/create_music', views.PieceOfMusicCreate.as_view(), name='create_music'),
-     path('music/<int:pk>/edit', views.PieceOfMusicDelete.as_view(), name='delete_music')
+     path('music/<int:pk>/delete', views.PieceOfMusicDelete.as_view(), name='delete_music')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

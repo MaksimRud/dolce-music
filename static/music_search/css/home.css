@@ -13,6 +13,7 @@ body {
 header {
 	background-color: rgba(84, 86, 31, 0.0);
 	width: 100%;
+	
 }
 
 ul {
@@ -33,13 +34,16 @@ li {
 }
 
 .header {
+	display: flex;
+	flex-direction: column;
+	padding: 2.3em 0;
 	height: 50px;
 }
 
-.header-nav ul {
-	height: 50px;
+header ul li {
 	display: inline-block;
-	vertical-align: middle;
+	/*vertical-align: middle;*/
+	font-size: 0.9em;
 }
 
 .header-nav a.home {
@@ -50,15 +54,6 @@ li {
 .header-nav a {
 	font-family: 'Montserrat', sans-serif;
 	font-size: x-large;
-}
-
-.header-nav__items {
-	padding: 0;
-	display: flex;
-	text-align: center;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
 }
 
 main .home-banner {
@@ -125,4 +120,25 @@ main .banner-info .banner p {
 .main-footer__link a {
 	font-family: 'Montserrat', sans-serif;
 	font-size: medium;
+}
+
+/* HEADER */
+@media screen and (min-width : 600px){
+	.header{
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	nav{
+		align-self: center;
+		margin: 0 5em 0 0;
+	}
+
+	.header-log__items{
+		padding: 0;
+	}
+
+	.header-log__item{
+		padding: 0;
+	}
 }

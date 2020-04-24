@@ -54,6 +54,9 @@ li {
 }
 
 .header {
+	display: flex;
+	flex-direction: column;
+	padding: 0;
 	height: 50px;
 }
 
@@ -76,6 +79,11 @@ li {
 
 .header-nav a.home:hover {
 	color: #333333;
+}
+
+.header-nav a:hover{
+	color: #333333;
+	text-decoration: none;
 }
 
 .header-nav a {
@@ -233,4 +241,24 @@ a.button:hover {
 
 .db-table__action-list {
 	padding: 0;
+}
+
+@media screen and (min-width : 600px){
+	.header{
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	nav{
+		align-self: center;
+		margin: 0 5em 0 0;
+	}
+
+	.header-log__items{
+		padding: 0;
+	}
+
+	.header-log__item{
+		padding: 0;
+	}
 }

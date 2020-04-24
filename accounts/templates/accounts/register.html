@@ -1,0 +1,27 @@
+{% extends "base_edit.html" %}
+{% load static %}
+
+{% block head %}
+    <header>
+        <div class="header">
+            <nav class="header-nav">
+                <ul class="header-nav__items">
+                    <li class="header-nav__item">
+                        <a class="home" href="/">Dolce Music</a> 
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    {% block header %}
+      <h1>Register</h1>
+    {% endblock %}
+    <form method='POST'> {% csrf_token %}
+      {{ form }}
+      <button type='submit' class='btn btn-default'>Submit</button>
+    </form>
+
+{% endblock %}

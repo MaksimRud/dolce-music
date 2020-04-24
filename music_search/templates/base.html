@@ -1,3 +1,6 @@
+{% url 'accounts:login' as login_url %}
+{% url 'accounts:logout' as logout_url %}
+{% url 'accounts:register' as register_url %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +35,22 @@
                     <li class="header-nav__item">
                         <a href="{% url 'music_search:music' %}">Music</a>
                     </li>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <ul class="header-log__items">
+                {% if request.user.is_authenticated %}
+                    <li class="header-log__item {% if request.path == logout_url %}active{% endif %}">
+                        <a class="nav-link" href="{{ logout_url }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="header-nav__item {% if request.path == register_url %}active{% endif %}">
+                        <a class="nav-link" href="{{ register_url }}">Register</a>
+                    </li>
+                    <li class="header-nav__item {% if request.path == login_url %}active{% endif %}">
+                        <a class="nav-link" href="{{ login_url }}">Login</a>
+                    </li>
+                {% endif %}
                 </ul>
             </nav>
         </div>

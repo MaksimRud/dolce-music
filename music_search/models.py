@@ -75,7 +75,7 @@ class TypeOfPiece(models.Model):
 
 class PieceOfMusic(models.Model):
     # Field name made lowercase.
-    name = models.CharField(db_column='Name', unique=True, max_length=45)
+    name = models.CharField(db_column='Name', unique=True, max_length=50)
     # Field name made lowercase. This field type is a guess.
     year_written = models.DateField(db_column='Year_written')
     # Field name made lowercase.
