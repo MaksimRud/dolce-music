@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django_extensions',
     'django-dia',
+<<<<<<< HEAD
+=======
+    'music_search',
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
     'widget_tweaks',
 ]
 
@@ -50,6 +54,7 @@ GRAPH_MODELS = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+<<<<<<< HEAD
 AUTH_USER_MODEL = 'accounts.User' #changes the built-in user model to urs 
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
@@ -61,6 +66,8 @@ EMAIL_HOST_USER = 'mr.freiermann01@gmail.com'
 EMAIL_HOST_PASSWORD = 'weihnachtsmann2001'
 EMAIL_PORT = 587
 
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -13,7 +13,10 @@ body {
 header {
 	background-color: rgba(84, 86, 31, 0.0);
 	width: 100%;
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 }
 
 ul {
@@ -34,6 +37,7 @@ li {
 }
 
 .header {
+<<<<<<< HEAD
 	display: flex;
 	flex-direction: column;
 	padding: 2.3em 0;
@@ -44,6 +48,15 @@ header ul li {
 	display: inline-block;
 	/*vertical-align: middle;*/
 	font-size: 0.9em;
+=======
+	height: 50px;
+}
+
+.header-nav ul {
+	height: 50px;
+	display: inline-block;
+	vertical-align: middle;
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 }
 
 .header-nav a.home {
@@ -56,6 +69,18 @@ header ul li {
 	font-size: x-large;
 }
 
+<<<<<<< HEAD
+=======
+.header-nav__items {
+	padding: 0;
+	display: flex;
+	text-align: center;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 main .home-banner {
 	background-image: linear-gradient(to bottom, rgba(35, 35, 14, 0.5), rgba(44, 45, 17, 0.5)),
 		url(../img/FranzLiszt.jpg);
@@ -121,6 +146,7 @@ main .banner-info .banner p {
 	font-family: 'Montserrat', sans-serif;
 	font-size: medium;
 }
+<<<<<<< HEAD
 
 /* HEADER */
 @media screen and (min-width : 600px){
@@ -142,3 +168,5 @@ main .banner-info .banner p {
 		padding: 0;
 	}
 }
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e

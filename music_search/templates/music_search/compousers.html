@@ -7,7 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<<<<<<< HEAD
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
     {% block title %}<title>{{section}}</title>{% endblock %}
     <link rel="stylesheet" href="{% static "music_search/css/style.css" %}" type="text/css">
 </head>
@@ -19,6 +22,7 @@
         {% block create_button %}
             <a href="{% url 'music_search:create_compouser' %}" class="button" >Create Compouser</a>
         {% endblock %}
+<<<<<<< HEAD
         {% block excel_button %}
             <form action="" method = "GET"> 
                 {% csrf_token %}
@@ -38,6 +42,8 @@
         {% if uploaded_file_url %}
             <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
         {% endif %}
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
         {% if compousers_list %}
         {% block table %}
         <table class="db-table">
@@ -45,6 +51,7 @@
             <thead>
                 <tr>
                 {% for key in header %}
+<<<<<<< HEAD
                     {% if key == "birth_date" %}
                         <th>
                             {{'birth date'}}
@@ -58,6 +65,11 @@
                             {{key}}
                         </th>
                     {% endif %}
+=======
+                    <th>
+                        {{key}}
+                    </th>
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
                 {% endfor %}
                     <th>
                         action
@@ -91,6 +103,7 @@
                                     </a>
                                 </li>
                                 <li>
+<<<<<<< HEAD
                                     <a href="{% url 'music_search:delete_compouser' compouser.id %}">
                                         Delete
                                     </a> 
@@ -110,3 +123,25 @@
     </section> 
 </body> 
 </html> 
+=======
+                                    <a>
+                                        Delete
+                                    </a>
+                                    
+                                </li>
+                            </ul> 
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% endblock %}    
+        </table>
+        <div id="chart-container">{{ chart_compousers|safe }}</div>
+        {% endblock %}
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    </section>
+</body>
+</html>
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e

@@ -5,6 +5,7 @@ from django.http import HttpResponse, request, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+<<<<<<< HEAD
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.template.defaulttags import register
@@ -23,6 +24,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .decorators import admin_required
+=======
+from .forms import *
+from .models import *
+from .fusioncharts import FusionCharts
+#from .forms import PeriodEditFrom
+# Create your views here.
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
 
 @login_required
@@ -95,6 +103,7 @@ def post_per_file(request):
         filename = fs.save(excel_file.name, excel_file)
         uploaded_file_url = fs.url(filename)
 
+<<<<<<< HEAD
         wb = openpyxl.load_workbook(excel_file)
 
         worksheet = wb[wb.sheetnames[0]]
@@ -227,6 +236,11 @@ class CompousersView(LoginRequiredMixin, generic.ListView):
     model = Compouser
     template_name = 'music_search/compousers.html'
     login_url = '/login/'
+=======
+class CompousersView(generic.ListView):
+    model = Compousers
+    template_name = 'music_search/compousers.html'
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
     def chart(self):
         dataSource = {}
@@ -240,6 +254,7 @@ class CompousersView(LoginRequiredMixin, generic.ListView):
             "decimals": "0",
             "theme": "fusion"
         }
+<<<<<<< HEAD
 
         dataSource['data'] = []
 
@@ -247,12 +262,66 @@ class CompousersView(LoginRequiredMixin, generic.ListView):
             data = {}
             data['label'] = key.name
             data['value'] = key.num_compousers
+=======
+        dataSource['data'] = []
+
+        Renesans_comp = 0
+        Baroque_comp = 0
+        Classical_comp = 0
+        Romatic_comp = 0
+        Postmod = 0
+
+        for key in Compousers.objects.all():
+            if key.period.name == 'Baroque':
+                Baroque_comp += 1
+            elif key.period.name == 'Renaissance':
+                Renesans_comp += 1
+            elif key.period.name == 'Classical':
+                Classical_comp += 1
+            elif key.period.name == 'Romantic':
+                Romatic_comp += 1
+
+        periods = [Classical_comp, Baroque_comp,
+                   Romatic_comp, Renesans_comp, Postmod]
+
+        index = 0
+        for key in Period.objects.all():
+            data = {}
+            data['label'] = key.name
+            data['value'] = periods[index]
+            index += 1
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
             dataSource['data'].append(data)
 
         pie2D = FusionCharts(type="doughnut2d", id="ex1", width="550", height="450",
                              renderAt="chart-container", dataFormat="json", dataSource=dataSource)
 
         return pie2D
+<<<<<<< HEAD
+=======
+
+    def get_context_data(self, **kwargs):
+        context = super(CompousersView, self).get_context_data(**kwargs)
+        compouser_values = Compousers.objects.order_by(
+            'birth_date').values('name', 'birth_date', 'death_date', 'id')
+        index = 0
+        for comp in compouser_values:
+            c = Compousers.objects.get(pk=comp['id'])
+            compouser_values[index]['period'] = c.period.name
+            del compouser_values[index]['id']
+            compouser_values[index]['id'] = c.id
+            index += 1
+        context['compousers_list'] = Compousers.objects.order_by('birth_date')
+        context['header'] = list(compouser_values[0].keys())[:-1]
+        context['content_compousers'] = list(compouser_values)
+        context['chart_compousers'] = self.chart().render()
+        return context
+
+
+class DetailView(generic.DetailView):
+    model = Period
+    template_name = 'music_search/period_detail.html'
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
     def get_context_data(self, **kwargs):
         context = super(CompousersView, self).get_context_data(**kwargs)
@@ -583,6 +652,7 @@ def post_music_file(request):
                 continue
             i += 1
 
+<<<<<<< HEAD
             name = data[1]
         
             if name == None:
@@ -662,12 +732,18 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Period
     template_name = 'music_search/period_detail.html'
     login_url = '/login/'
+=======
+class CompousersDetailView(generic.DetailView):
+    model = Compousers
+    template_name = 'music_search/compousers_detail.html'
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
     def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(CompousersDetailView, self).get_context_data(**kwargs)
         return context
 
 
+<<<<<<< HEAD
 class CompousersDetailView(LoginRequiredMixin, generic.DetailView):
     model = Compouser
     template_name = 'music_search/compousers_detail.html'
@@ -681,6 +757,13 @@ class MusicDetailView(LoginRequiredMixin, generic.DeleteView):
     model = PieceOfMusic
     template_name = 'music_search/music_detail.html'
     login_url = '/login/'
+=======
+class PeriodCreate(CreateView):
+    model = Period
+    form_class = PeriodForm
+    template_name = 'music_search/period_create.html'
+    #fields = ['time_of_period', 'name', 'descr']
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
     def get_context_data(self, **kwargs):
         context = super(MusicDetailView, self).get_context_data(**kwargs)
@@ -709,9 +792,13 @@ class MusicDetailView(LoginRequiredMixin, generic.DeleteView):
 class PeriodCreate(LoginRequiredMixin, CreateView):
     model = Period
     form_class = PeriodForm
+<<<<<<< HEAD
     template_name = 'music_search/period_create.html'
     login_url = '/login/'
     #fields = ['time_of_period', 'name', 'descr']
+=======
+    template_name = 'music_search/period_edit.html'
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
 @method_decorator([login_required, admin_required], name='dispatch')
 class PeriodUpdate(LoginRequiredMixin, UpdateView):
@@ -777,3 +864,20 @@ class PieceOfMusicDelete(LoginRequiredMixin, DeleteView):
 
 
 
+
+class CompousersCreate(CreateView):
+    model = Compousers
+    form_class = CompousersForm
+    template_name = 'music_search/compousers_create.html'
+    #fields = ['time_of_period', 'name', 'descr']
+
+
+class CompousersUpdate(UpdateView):
+    model = Compousers
+    form_class = CompousersForm
+    template_name = 'music_search/compousers_edit.html'
+
+
+class CompousersDelete(DeleteView):
+    model = Compousers
+    success_url = reverse_lazy('period-list')

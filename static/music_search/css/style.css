@@ -60,14 +60,22 @@ li {
 	height: 50px;
 }
 
+<<<<<<< HEAD
 .header-nav .header-nav__items {
+=======
+.header-nav .header-nav__items{
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 	height: 50px;
 	line-height: 50px;
 	display: inline-block;
 	vertical-align: middle;
 }
 
+<<<<<<< HEAD
 .header-nav__item {
+=======
+.header-nav__item{
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 	padding-left: 10px;
 }
 
@@ -81,10 +89,14 @@ li {
 	color: #333333;
 }
 
+<<<<<<< HEAD
 .header-nav a:hover{
 	color: #333333;
 	text-decoration: none;
 }
+=======
+
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
 .header-nav a {
 	font-family: 'Montserrat', sans-serif;
@@ -101,7 +113,11 @@ li {
 section {
 	position: relative;
 	margin: 0 auto;
+<<<<<<< HEAD
 	max-width: 1200px;
+=======
+	max-width: 960px;
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 	padding: 70px 150px 100px 150px;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 	background-color: #ffffff;
@@ -126,6 +142,7 @@ a.button:hover {
 	color: #333333;
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 600;
+<<<<<<< HEAD
 	border: 3px  #333333;
 }
 
@@ -193,6 +210,8 @@ a.button:hover {
 
 .inputfile + lable{
 	cursor: pointer;
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 }
 
 .table-name {
@@ -236,6 +255,7 @@ a.button:hover {
 }
 
 .db-table .db-table__action {
+	width: 100%;
 	text-align: center;
 }
 

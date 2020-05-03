@@ -9,11 +9,14 @@ from django.db import models
 from django.forms import ModelForm
 from django.urls import reverse
 from django.core.validators import RegexValidator
+<<<<<<< HEAD
 from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager
 )
 import os
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 from .validators import *
 
 

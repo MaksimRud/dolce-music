@@ -8,11 +8,16 @@
     <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<<<<<<< HEAD
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+=======
+  <title>Simple is Better Than Complex</title>
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
     <link rel="stylesheet" href="{% static "music_search/css/style.css" %}"  type="text/css">
     <title>Edit</title>
 </head>
 <body>
+<<<<<<< HEAD
     {% block head %}
     <header>
         <div class="header">
@@ -29,6 +34,15 @@
                     </li>
                     <li class="header-nav__item">
                         <a href="{% url 'music_search:music' %}">Music</a>
+=======
+   
+    <header>
+        <div class="header">
+            <nav class="header-nav">
+                <ul>
+                    <li>
+                        <a class="home" href="/">Dolce Music</a> 
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
                     </li>
                 </ul>
             </nav>
@@ -38,11 +52,15 @@
     <main>
         <section>
             <div>
+<<<<<<< HEAD
                 {% block header %}
 
                   <h1>Edit</h1>
 
                 {% endblock %}
+=======
+                <h1>Edit</h1>
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
                 {% block from_edit %}
                 <form method="post" novalidate>
                     {% csrf_token %}

@@ -17,17 +17,22 @@ urlpatterns = [
     path('periods/<int:pk>/edit',
          views.PeriodUpdate.as_view(), name='edit_period'),
     path('periods/create', views.PeriodCreate.as_view(), name='create_period'),
+<<<<<<< HEAD
     path('periods/<int:pk>/delete',
          views.PeriodDelete.as_view(), name='delete_period'),
     # compousers path
     path('compousers/downl', views.get_comp_file, name='excel_compouser'),
     path('compousers/excel_upd', views.post_comp_file, name='post_excel_compouser'),
+=======
+    # compousers path
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
     path('compousers/', views.CompousersView.as_view(), name='compouser'),
     path('compousers/<int:pk>/details',
          views.CompousersDetailView.as_view(), name='detail_compouser'),
     path('compousers/<int:pk>/edit',
          views.CompousersUpdate.as_view(), name='edit_compouser'),
     path('compousers/create_compouser', views.CompousersCreate.as_view(),
+<<<<<<< HEAD
          name='create_compouser'),
     path('compousers/<int:pk>/delete',
          views.CompousersDelete.as_view(), name='delete_compouser'),
@@ -39,6 +44,9 @@ urlpatterns = [
      path('music/<int:pk>/edit', views.PieceOfMusicUpdate.as_view(), name='edit_music'),
      path('music/create_music', views.PieceOfMusicCreate.as_view(), name='create_music'),
      path('music/<int:pk>/delete', views.PieceOfMusicDelete.as_view(), name='delete_music')
+=======
+         name='create_compouser')
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 ]
 
 urlpatterns += staticfiles_urlpatterns()

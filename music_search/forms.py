@@ -1,10 +1,17 @@
 from django import forms
 from django.core.validators import RegexValidator
+<<<<<<< HEAD
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 from django.forms import ModelForm
 from .validators import *
 from .models import *
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 class PeriodForm(ModelForm):
     name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', }), validators=[RegexValidator(regex='^\w+$')])
@@ -36,7 +43,11 @@ class CompousersForm(ModelForm):
         widget=forms.DateInput(attrs={'class': 'form-control'}))
 
     class Meta:
+<<<<<<< HEAD
         model = Compouser
+=======
+        model = Compousers
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
         fields = '__all__'
 
     def clean(self):
@@ -45,6 +56,7 @@ class CompousersForm(ModelForm):
         birth_date = cleaned_data.get("birth_date")
         death_date = cleaned_data.get("death_date")
 
+<<<<<<< HEAD
 class MusicForm(ModelForm):
     name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', }), validators=[RegexValidator(regex='\w+')])
@@ -59,6 +71,8 @@ class MusicForm(ModelForm):
         name = cleaned_data.get("name")
         year_written = cleaned_data.get("year_written")
 
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
 '''class PeriodEditFrom(forms.Form):
     period_name = forms.CharField(lable='Period name', max_length = 100)

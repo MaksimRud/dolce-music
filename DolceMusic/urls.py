@@ -22,7 +22,10 @@ from . import views
 urlpatterns = [
     path('search/', include('music_search.urls')),
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
     path('log/', include('accounts.urls')),
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
     path('', views.home, name='home'),
 ]
 

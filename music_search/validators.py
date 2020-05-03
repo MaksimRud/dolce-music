@@ -1,11 +1,18 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+<<<<<<< HEAD
 import re
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 
 
 def split(word):
     return [char for char in word]
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
 def validate_year(value):
     characters = split(value)
 

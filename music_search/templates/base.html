@@ -31,9 +31,12 @@
                     </li>
                     <li class="header-nav__item">
                         <a href="{% url 'music_search:compouser' %}">Compousers</a>
+<<<<<<< HEAD
                     </li>
                     <li class="header-nav__item">
                         <a href="{% url 'music_search:music' %}">Music</a>
+=======
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
                     </li>
                 </ul>
             </nav>
@@ -58,6 +61,7 @@
     {% endblock %}
         <section>
                 {% block table-header %}<h1 class="table-name">Topic</h1>{% endblock %}
+<<<<<<< HEAD
                 <ul class = "features-buttons">
                     <li class="features-button">
                         {% block create_button %}
@@ -76,6 +80,11 @@
                         {% endblock %}
                     </li>
                 </ul>
+=======
+                {% block create_button %}
+                    <a href="base_create.html" class="button" >Create </a>
+                {% endblock %}
+>>>>>>> 3c85a009d41e0aa88e8966791cf5bf3e6148b68e
                 {% block table %}
                 <table class="db-table">
 
